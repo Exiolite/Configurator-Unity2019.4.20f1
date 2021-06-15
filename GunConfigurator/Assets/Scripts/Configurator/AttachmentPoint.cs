@@ -4,25 +4,27 @@ namespace Configurator
 {
     public class AttachmentPoint : MonoBehaviour
     {
-        public bool IsBusy { get; private set; }
+        [SerializeField] private AttachmentPointPreset _pointType;
 
-        public Attachment Attachment { get; private set; }
+        private Attachment _attachment;
+        
 
-        public void AttachIfNotOccupied(Attachment attachment)
+        public bool TryAttach(Attachment attachment)
         {
-            if (IsBusy) return;
-            
-            Attachment = Instantiate(attachment, transform);
-            Attachment.AttachTo(this);
-            IsBusy = true;
-        }
+            if (attachment.AttachmentPoint._pointType == _pointType)
+            {
+                if (_attachment == null)
+                {
+                    _attachment = Instantiate(attachment, transform);
+                    _attachment.SetPosAndRotTo(this);
+                    return true;
+                }
+            }
 
-        public void Detach()
-        {
-            if (!IsBusy) return;
+            if (_attachment.Attach(attachment))
+                return true;
             
-            Destroy(Attachment.gameObject);
-            IsBusy = false;
+            return false;
         }
     }
 }
