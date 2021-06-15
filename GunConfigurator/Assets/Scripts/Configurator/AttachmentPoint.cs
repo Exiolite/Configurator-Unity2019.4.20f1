@@ -11,18 +11,19 @@ namespace Configurator
 
         public bool TryAttach(Attachment attachment)
         {
-            if (attachment.AttachmentPoint._pointType == _pointType)
+            
+            if (_attachment == null)
             {
-                if (_attachment == null)
+                if (attachment.AttachmentPoint._pointType == _pointType)
                 {
                     _attachment = Instantiate(attachment, transform);
                     _attachment.SetPosAndRotTo(this);
                     return true;
                 }
             }
-
-            if (_attachment.Attach(attachment))
-                return true;
+            
+            if (_attachment != null)
+                return _attachment.Attach(attachment);
             
             return false;
         }
